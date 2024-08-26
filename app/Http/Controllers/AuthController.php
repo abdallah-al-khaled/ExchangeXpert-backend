@@ -75,4 +75,17 @@ class AuthController extends Controller
             'message' => 'Successfully logged out',
         ]);
     }
+
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
+    }
+
 }
