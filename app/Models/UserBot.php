@@ -15,5 +15,9 @@ class UserBot extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
+    public function bot()
+    {
+        return $this->belongsTo(Bot::class);
+    }
 }
