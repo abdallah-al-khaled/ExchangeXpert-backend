@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ml_predictions', function (Blueprint $table) {
             $table->id();
+            $table->string('stock_symbol');
+            $table->decimal('predicted_price', 15, 2);
+            $table->timestamp('prediction_date');
             $table->timestamps();
         });
     }
