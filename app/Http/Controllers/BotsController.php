@@ -24,4 +24,11 @@ class BotsController extends Controller
         $bot = Bot::findOrFail($id);
         return response()->json($bot);
     }
+
+    public function update(Request $request, $id)
+    {
+        $bot = Bot::findOrFail($id);
+        $bot->update($request->all());
+        return response()->json($bot, 200);
+    }
 }
