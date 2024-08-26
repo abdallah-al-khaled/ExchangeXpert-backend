@@ -12,4 +12,10 @@ class BotsController extends Controller
         $bots = Bot::all();
         return response()->json($bots);
     }
+
+    public function store(Request $request)
+    {
+        $bot = Bot::create($request->all());
+        return response()->json($bot, 201);
+    }
 }
