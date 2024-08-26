@@ -12,4 +12,10 @@ class TradesController extends Controller
         $trades = Trade::with('userBot')->get();
         return response()->json($trades);
     }
+
+    public function store(Request $request)
+    {
+        $trade = Trade::create($request->all());
+        return response()->json($trade, 201);
+    }
 }
