@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bot;
 use Illuminate\Http\Request;
 
 class BotsController extends Controller
 {
-    //
+    public function index()
+    {
+        $bots = Bot::all();
+        return response()->json($bots);
+    }
 }
