@@ -18,4 +18,10 @@ class BotsController extends Controller
         $bot = Bot::create($request->all());
         return response()->json($bot, 201);
     }
+
+    public function show($id)
+    {
+        $bot = Bot::findOrFail($id);
+        return response()->json($bot);
+    }
 }
