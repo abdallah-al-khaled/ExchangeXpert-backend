@@ -18,4 +18,10 @@ class MlPredictionsController extends Controller
         $prediction = MlPrediction::create($request->all());
         return response()->json($prediction, 201);
     }
+
+    public function show($id)
+    {
+        $prediction = MlPrediction::findOrFail($id);
+        return response()->json($prediction);
+    }
 }
