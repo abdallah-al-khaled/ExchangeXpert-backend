@@ -11,4 +11,10 @@ class UserBotsController extends Controller
         $userBots = UserBot::with('user', 'bot')->get();
         return response()->json($userBots);
     }
+
+    public function store(Request $request)
+    {
+        $userBot = UserBot::create($request->all());
+        return response()->json($userBot, 201);
+    }
 }
