@@ -18,4 +18,10 @@ class SentimentAnalysisController extends Controller
         $analysis = SentimentAnalysis::create($request->all());
         return response()->json($analysis, 201);
     }
+
+    public function show($id)
+    {
+        $analysis = SentimentAnalysis::findOrFail($id);
+        return response()->json($analysis);
+    }
 }
