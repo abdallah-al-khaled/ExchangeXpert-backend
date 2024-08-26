@@ -37,4 +37,13 @@ class TradesController extends Controller
         Trade::destroy($id);
         return response()->json(null, 204);
     }
+
+    // Retrieve all unsold stocks for a user-bot relation
+    public function unsoldStocks($userBotId)
+    {
+        $unsoldStocks = Trade::where('user_bot_id', $userBotId)
+                             ->whereNull('sold_at')
+                             ->get();
+        return response()->json($unsoldStocks);
+    }
 }
