@@ -18,4 +18,10 @@ class TradesController extends Controller
         $trade = Trade::create($request->all());
         return response()->json($trade, 201);
     }
+
+    public function show($id)
+    {
+        $trade = Trade::with('userBot')->findOrFail($id);
+        return response()->json($trade);
+    }
 }
