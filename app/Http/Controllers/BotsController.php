@@ -31,4 +31,10 @@ class BotsController extends Controller
         $bot->update($request->all());
         return response()->json($bot, 200);
     }
+
+    public function destroy($id)
+    {
+        Bot::destroy($id);
+        return response()->json(null, 204);
+    }
 }
