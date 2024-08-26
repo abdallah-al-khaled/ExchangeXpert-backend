@@ -13,4 +13,9 @@ class MlPredictionsController extends Controller
         return response()->json($predictions);
     }
 
+    public function store(Request $request)
+    {
+        $prediction = MlPrediction::create($request->all());
+        return response()->json($prediction, 201);
+    }
 }
