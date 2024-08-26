@@ -31,4 +31,10 @@ class TradesController extends Controller
         $trade->update($request->all());
         return response()->json($trade, 200);
     }
+
+    public function destroy($id)
+    {
+        Trade::destroy($id);
+        return response()->json(null, 204);
+    }
 }
