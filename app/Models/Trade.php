@@ -17,4 +17,10 @@ class Trade extends Model
     {
         return $this->belongsTo(UserBot::class);
     }
+
+    // To check if the trade is still open (i.e., not sold)
+    public function isOpen()
+    {
+        return is_null($this->sold_at);
+    }
 }
