@@ -31,4 +31,10 @@ class SentimentAnalysisController extends Controller
         $analysis->update($request->all());
         return response()->json($analysis, 200);
     }
+
+    public function destroy($id)
+    {
+        SentimentAnalysis::destroy($id);
+        return response()->json(null, 204);
+    }
 }
