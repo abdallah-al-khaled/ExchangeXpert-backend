@@ -12,4 +12,9 @@ class Trade extends Model
         'user_bot_id', 'stock_symbol', 'action', 'quantity', 'price', 
         'buy_at', 'sold_at'
     ];
+
+    public function userBot()
+    {
+        return $this->belongsTo(UserBot::class);
+    }
 }
