@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('sentiment_analysis', function (Blueprint $table) {
             $table->id();
+            $table->string('stock_symbol');
+            $table->decimal('sentiment_score', 5, 2);
+            $table->timestamp('analysis_date');
             $table->timestamps();
         });
     }
