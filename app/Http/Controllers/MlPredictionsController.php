@@ -31,4 +31,10 @@ class MlPredictionsController extends Controller
         $prediction->update($request->all());
         return response()->json($prediction, 200);
     }
+
+    public function destroy($id)
+    {
+        MlPrediction::destroy($id);
+        return response()->json(null, 204);
+    }
 }
