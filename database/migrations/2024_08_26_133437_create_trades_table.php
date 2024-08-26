@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('trades', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_bot_id')->constrained()->onDelete('cascade');
+            $table->string('stock_symbol'); // Stock identifier (e.g., AAPL)
+            $table->enum('action', ['buy', 'sell']);
+            $table->integer('quantity');
+            $table->decimal('price', 15, 2);
+            $table->timestamp('buy_at')->nullable();
+            $table->timestamp('sold_at')->nullable();
             $table->timestamps();
         });
     }
