@@ -30,4 +30,10 @@ class UserBotsController extends Controller
         $userBot->update($request->all());
         return response()->json($userBot, 200);
     }
+
+    public function destroy($id)
+    {
+        UserBot::destroy($id);
+        return response()->json(null, 204);
+    }
 }
