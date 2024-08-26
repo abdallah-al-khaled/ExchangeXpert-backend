@@ -24,4 +24,11 @@ class TradesController extends Controller
         $trade = Trade::with('userBot')->findOrFail($id);
         return response()->json($trade);
     }
+
+    public function update(Request $request, $id)
+    {
+        $trade = Trade::findOrFail($id);
+        $trade->update($request->all());
+        return response()->json($trade, 200);
+    }
 }
