@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SentimentAnalysis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;  // Import the Validator facade
 
 class SentimentAnalysisController extends Controller
 {
@@ -15,7 +16,26 @@ class SentimentAnalysisController extends Controller
 
     public function store(Request $request)
     {
-        $analysis = SentimentAnalysis::create($request->all());
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'stock_symbol' => 'required|string|max:10',
+            'sentiment_score' => 'required|numeric|between:-100,100',
+            'analysis_date' => 'required|date',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Create sentiment analysis record
+        $analysis = SentimentAnalysis::create([
+            'stock_symbol' => $request->stock_symbol,
+            'sentiment_score' => $request->sentiment_score,
+            'analysis_date' => $request->analysis_date,
+        ]);
+
+        // Return the created record as a JSON response
         return response()->json($analysis, 201);
     }
 
