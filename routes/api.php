@@ -30,4 +30,4 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::post('/sentiment-analysis', [SentimentAnalysisController::class, 'store']);
 Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
-Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey']);
+Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey'])->middleware('admin');
