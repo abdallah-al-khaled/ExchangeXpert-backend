@@ -45,6 +45,10 @@ class ApiKeyController extends Controller
 
     return response()->json(['message' => 'API key stored successfully'], 201);
 }
+    public function getAlpacaAccountDetails($userId)
+    {
+        
+    }
 
     /**
      * Display the specified resource.
