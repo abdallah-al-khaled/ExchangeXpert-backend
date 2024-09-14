@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SentimentAnalysis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;  // Import the Validator facade
 
 class SentimentAnalysisController extends Controller
@@ -43,8 +44,8 @@ class SentimentAnalysisController extends Controller
     {
         // Fetch the latest sentiment entry for the provided stock symbol
         $latestSentiment = SentimentAnalysis::where('stock_symbol', $stock_symbol)
-                            ->orderBy('created_at', 'desc')
-                            ->first();
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         // Check if a sentiment record was found
         if ($latestSentiment) {
@@ -56,7 +57,14 @@ class SentimentAnalysisController extends Controller
 
     public function getTopStocksBySentiment()
     {
-        
+        $fiveDaysAgo = now()->subDays(5);
+
+        $topStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)  
+            ->select('stock_symbol', 'sentiment_score')  
+            ->orderBy('sentiment_score', 'desc') 
+            ->distinct('stock_symbol')  
+            ->take(5)
+            ->get();
     }
 
     public function show($id)
