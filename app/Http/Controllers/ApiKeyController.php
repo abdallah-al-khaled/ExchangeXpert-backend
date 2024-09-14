@@ -116,7 +116,24 @@ class ApiKeyController extends Controller
         // Make the request to the Alpaca API using Guzzle
         $client = new Client();
 
-        
+        try {
+            $response = $client->request('GET', $baseUrl, [
+                'headers' => [
+                    'APCA-API-KEY-ID' => $apiKey,
+                    'APCA-API-SECRET-KEY' => $apiSecret,
+                    'accept' => 'application/json',
+                ],
+            ]);
+
+            // Return the response from Alpaca API as JSON
+            return response()->json(json_decode($response->getBody(), true), 200);
+        } catch (\Exception $e) {
+            // Handle any errors, return a 500 Internal Server Error response
+            return response()->json([
+                'error' => 'Failed to retrieve open positions from Alpaca API',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
