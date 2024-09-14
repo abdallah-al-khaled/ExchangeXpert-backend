@@ -30,35 +30,35 @@ class ApiKeyController extends Controller
      * Store a newly created resource in storage.
      */
     public function storeAlpacaKey(Request $request)
-{
-    // Validate the request
-    $request->validate([
-        'api_key' => 'required|string',
-        'api_secret' => 'required|string',
-    ]);
+    {
+        // Validate the request
+        $request->validate([
+            'api_key' => 'required|string',
+            'api_secret' => 'required|string',
+        ]);
 
-    $userId = Auth::id();
+        $userId = Auth::id();
 
-    $apiKey = ApiKey::where('user_id', $userId)->first();
+        $apiKey = ApiKey::where('user_id', $userId)->first();
 
-    if ($apiKey) {
-        // If the API key record exists, update it
-        $apiKey->api_key = Crypt::encryptString($request->api_key); 
-        $apiKey->api_secret = Crypt::encryptString($request->api_secret);  
-        $apiKey->save();
-        
-        return response()->json(['message' => 'API key updated successfully'], 200);
-    } else {
-        // If no API key record exists, create a new one
-        $newApiKey = new ApiKey();
-        $newApiKey->user_id = $userId;
-        $newApiKey->api_key = Crypt::encryptString($request->api_key);  // Encrypt and store the API key
-        $newApiKey->api_secret = Crypt::encryptString($request->api_secret);  // Encrypt and store the API secret
-        $newApiKey->save();
+        if ($apiKey) {
+            // If the API key record exists, update it
+            $apiKey->api_key = Crypt::encryptString($request->api_key);
+            $apiKey->api_secret = Crypt::encryptString($request->api_secret);
+            $apiKey->save();
 
-        return response()->json(['message' => 'API key stored successfully'], 201);
+            return response()->json(['message' => 'API key updated successfully'], 200);
+        } else {
+            // If no API key record exists, create a new one
+            $newApiKey = new ApiKey();
+            $newApiKey->user_id = $userId;
+            $newApiKey->api_key = Crypt::encryptString($request->api_key);  // Encrypt and store the API key
+            $newApiKey->api_secret = Crypt::encryptString($request->api_secret);  // Encrypt and store the API secret
+            $newApiKey->save();
+
+            return response()->json(['message' => 'API key stored successfully'], 201);
+        }
     }
-}
 
     public function getAlpacaAccountDetails()
     {
@@ -69,15 +69,17 @@ class ApiKeyController extends Controller
             return response()->json(['error' => 'API keys not found for the user'], 404);
         }
 
-        // Decrypt the API key and secret
         $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
         $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
 
+        // Determine if the user is using live trading or paper trading based on 'is_activated' flag
+        $baseUrl = $apiKeyRecord->is_activated ? 'https://api.alpaca.markets/v2/account' : 'https://paper-api.alpaca.markets/v2/account';
+
         // Make the request to Alpaca API using Guzzle
-        $client = new Client();
+        $client = new \GuzzleHttp\Client();
 
         try {
-            $response = $client->request('GET', 'https://paper-api.alpaca.markets/v2/account', [
+            $response = $client->request('GET', $baseUrl, [
                 'headers' => [
                     'APCA-API-KEY-ID' => $apiKey,
                     'APCA-API-SECRET-KEY' => $apiSecret,
