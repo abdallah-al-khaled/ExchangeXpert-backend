@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('api_keys', function (Blueprint $table) {
             $table->id();
-                        $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Link to users table
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Link to users table
+            $table->text('api_key');  // Store the Alpaca API key
+            $table->text('api_secret');  // Store the Alpaca API secret
             $table->timestamps();
         });
     }
