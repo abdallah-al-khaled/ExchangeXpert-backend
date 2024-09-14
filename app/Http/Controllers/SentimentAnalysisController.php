@@ -54,6 +54,11 @@ class SentimentAnalysisController extends Controller
         }
     }
 
+    public function getTopStocksBySentiment()
+    {
+        
+    }
+
     public function show($id)
     {
         $analysis = SentimentAnalysis::findOrFail($id);
