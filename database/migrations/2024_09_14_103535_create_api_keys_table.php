@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Link to users table
             $table->text('api_key');  // Store the Alpaca API key
             $table->text('api_secret');  // Store the Alpaca API secret
+            $table->boolean('is_activated')->default(false);
             $table->timestamps();
         });
     }
