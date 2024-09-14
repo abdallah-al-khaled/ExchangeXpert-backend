@@ -37,7 +37,7 @@ class ApiKeyController extends Controller
 
     // Store the API key and secret for the user
     $apiKey = new ApiKey();
-    $apiKey->user_id = auth()->id();  // Associate with the logged-in user
+    $apiKey->user_id = $request->user_id;  // Associate with the logged-in user
     $apiKey->api_key = Crypt::encryptString($request->api_key);  // Encrypt the API key
     $apiKey->api_secret = Crypt::encryptString($request->api_secret);  // Encrypt the API secret
     $apiKey->save();

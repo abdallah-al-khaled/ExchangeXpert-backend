@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SentimentAnalysisController;
 use Illuminate\Http\Request;
@@ -29,3 +30,4 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::post('/sentiment-analysis', [SentimentAnalysisController::class, 'store']);
 Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
+Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey']);
