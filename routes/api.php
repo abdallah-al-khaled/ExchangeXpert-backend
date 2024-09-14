@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SentimentAnalysisController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,6 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
 });
+
+Route::post('/sentiment-analysis', [SentimentAnalysisController::class, 'store']);
+Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);

@@ -39,6 +39,21 @@ class SentimentAnalysisController extends Controller
         return response()->json($analysis, 201);
     }
 
+    public function getLatestSentiment($stock_symbol)
+    {
+        // Fetch the latest sentiment entry for the provided stock symbol
+        $latestSentiment = SentimentAnalysis::where('stock_symbol', $stock_symbol)
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+
+        // Check if a sentiment record was found
+        if ($latestSentiment) {
+            return response()->json($latestSentiment, 200);
+        } else {
+            return response()->json(['message' => 'No sentiment analysis found for the stock'], 404);
+        }
+    }
+
     public function show($id)
     {
         $analysis = SentimentAnalysis::findOrFail($id);
