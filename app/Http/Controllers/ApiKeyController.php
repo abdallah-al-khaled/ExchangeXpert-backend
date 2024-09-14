@@ -108,6 +108,14 @@ class ApiKeyController extends Controller
         $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
         $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
 
+        // Determine if the user is activated for live or paper trading
+        $baseUrl = $apiKeyRecord->is_activated 
+            ? 'https://api.alpaca.markets/v2/positions'  // Live trading
+            : 'https://paper-api.alpaca.markets/v2/positions';  // Paper trading
+
+        // Make the request to the Alpaca API using Guzzle
+        $client = new Client();
+
         
     }
 
