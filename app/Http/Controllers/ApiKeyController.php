@@ -96,6 +96,18 @@ class ApiKeyController extends Controller
 
     public function getOpenPositions()
     {
+        $userId = Auth::id();
+
+        $apiKeyRecord = ApiKey::where('user_id', $userId)->first();
+
+        // Check if API keys are available
+        if (!$apiKeyRecord) {
+            return response()->json(['error' => 'API keys not found for the user'], 404);
+        }
+
+        $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
+        $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
+
         
     }
 
