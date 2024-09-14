@@ -59,12 +59,18 @@ class SentimentAnalysisController extends Controller
     {
         $fiveDaysAgo = now()->subDays(5);
 
-        $topStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)  
-            ->select('stock_symbol', 'sentiment_score')  
-            ->orderBy('sentiment_score', 'desc') 
-            ->distinct('stock_symbol')  
+        $topStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)
+            ->select('stock_symbol', 'sentiment_score')
+            ->orderBy('sentiment_score', 'desc')
+            ->distinct('stock_symbol')
             ->take(5)
             ->get();
+
+        if ($topStocks->isNotEmpty()) {
+            return response()->json($topStocks, 200);
+        } else {
+            return response()->json(['message' => 'No sentiment analysis found in the last 5 days'], 404);
+        }
     }
 
     public function show($id)
