@@ -94,6 +94,11 @@ class ApiKeyController extends Controller
         }
     }
 
+    public function getOpenPositions()
+    {
+        
+    }
+
     /**
      * Display the specified resource.
      */
