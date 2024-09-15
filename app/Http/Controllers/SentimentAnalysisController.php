@@ -75,6 +75,8 @@ class SentimentAnalysisController extends Controller
 
     public function getWorstStocksBySentiment()
     {
+        $fiveDaysAgo = now()->subDays(5);
+
         
     }
 
