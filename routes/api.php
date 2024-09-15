@@ -33,7 +33,7 @@ Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::c
 Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey'])->middleware('auth:api');
 
 Route::post('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails'])->middleware('auth:api');
-Route::post('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory']);
+Route::post('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory'])->middleware('auth:api');
 
 
 Route::get('/top-sentiment-stocks', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
