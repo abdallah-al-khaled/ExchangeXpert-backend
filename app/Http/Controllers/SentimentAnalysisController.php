@@ -77,6 +77,14 @@ class SentimentAnalysisController extends Controller
     {
         $fiveDaysAgo = now()->subDays(5);
 
+        // Query to get the worst 5 stocks by sentiment score
+        $worstStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)
+            ->select('stock_symbol', 'sentiment_score')
+            ->orderBy('sentiment_score', 'asc')  // Order by ascending sentiment score
+            ->distinct('stock_symbol')            // Ensure unique stock symbols
+            ->take(5)                             // Limit to 5 results
+            ->get();
+
         
     }
 
