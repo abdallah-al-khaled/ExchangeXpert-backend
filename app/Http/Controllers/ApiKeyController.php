@@ -145,7 +145,35 @@ class ApiKeyController extends Controller
             return response()->json(['error' => 'API keys not found for the user'], 404);
         }
 
-        
+        // Decrypt the API key and secret
+        $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
+        $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
+
+        // Determine if this is a paper trading account or a live account
+        $baseUrl = $apiKeyRecord->is_active ? 'https://api.alpaca.markets' : 'https://paper-api.alpaca.markets';
+
+        // Make the request to Alpaca API using Guzzle
+        $client = new Client();
+
+        try {
+            $response = $client->request('GET', "$baseUrl/v2/account/portfolio/history", [
+                'headers' => [
+                    'APCA-API-KEY-ID' => $apiKey,
+                    'APCA-API-SECRET-KEY' => $apiSecret,
+                    'accept' => 'application/json',
+                ],
+                'query' => [
+                    'period' => '5D',   // Fetch for the last 5 days
+                    'timeframe' => '5Min',  // Data interval
+                    'intraday_reporting' => 'market_hours',
+                    'pnl_reset' => 'per_day'
+                ]
+            ]);
+
+            // Return the response from Alpaca API as JSON
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve data from Alpaca API', 'details' => $e->getMessage()], 500);
+        }
     }
 
     /**
