@@ -171,6 +171,7 @@ class ApiKeyController extends Controller
             ]);
 
             // Return the response from Alpaca API as JSON
+            return response()->json(data: json_decode($response->getBody(), true), 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve data from Alpaca API', 'details' => $e->getMessage()], 500);
         }
