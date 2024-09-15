@@ -31,10 +31,14 @@ Route::controller(AuthController::class)->group(function () {
 Route::post('/sentiment-analysis', [SentimentAnalysisController::class, 'store']);
 Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
 Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey'])->middleware('auth:api');
+
 Route::post('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails'])->middleware('auth:api');
+Route::post('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory']);
+
 
 Route::get('/top-sentiment-stocks', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
 Route::get('/worst-sentiment-stocks', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
 
 Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->middleware('auth:api');
+
 
