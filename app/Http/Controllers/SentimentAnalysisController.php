@@ -73,6 +73,11 @@ class SentimentAnalysisController extends Controller
         }
     }
 
+    public function getWorstStocksBySentiment()
+    {
+        
+    }
+
     public function show($id)
     {
         $analysis = SentimentAnalysis::findOrFail($id);
