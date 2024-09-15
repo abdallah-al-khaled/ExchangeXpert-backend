@@ -136,6 +136,11 @@ class ApiKeyController extends Controller
         }
     }
 
+    public function getPortfolioHistory()
+    {
+        
+    }
+
     /**
      * Display the specified resource.
      */
