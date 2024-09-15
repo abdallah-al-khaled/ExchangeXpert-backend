@@ -138,6 +138,13 @@ class ApiKeyController extends Controller
 
     public function getPortfolioHistory()
     {
+        $userId = Auth::id();
+        $apiKeyRecord = ApiKey::where('user_id', $userId)->first();
+
+        if (!$apiKeyRecord) {
+            return response()->json(['error' => 'API keys not found for the user'], 404);
+        }
+
         
     }
 
