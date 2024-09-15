@@ -34,5 +34,7 @@ Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey'])->m
 Route::post('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails'])->middleware('auth:api');
 
 Route::get('/top-sentiment-stocks', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
+Route::get('/worst-sentiment-stocks', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
+
 Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->middleware('auth:api');
 

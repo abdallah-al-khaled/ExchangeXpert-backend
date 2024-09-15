@@ -59,11 +59,12 @@ class SentimentAnalysisController extends Controller
     {
         $fiveDaysAgo = now()->subDays(5);
 
-        $topStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)
-            ->select('stock_symbol', 'sentiment_score')
-            ->orderBy('sentiment_score', 'desc')
-            ->distinct('stock_symbol')
-            ->take(5)
+        // Subquery to get the latest sentiment score for each stock symbol
+        $topStocks = SentimentAnalysis::select('stock_symbol', DB::raw('MAX(sentiment_score) as sentiment_score'))
+            ->where('created_at', '>=', $fiveDaysAgo)
+            ->groupBy('stock_symbol')  // Ensure we only get the latest entry per stock symbol
+            ->orderBy('sentiment_score', 'desc')  // Order by highest sentiment score
+            ->take(5)  // Limit to top 5 results
             ->get();
 
         if ($topStocks->isNotEmpty()) {
@@ -77,12 +78,12 @@ class SentimentAnalysisController extends Controller
     {
         $fiveDaysAgo = now()->subDays(5);
 
-        // Query to get the worst 5 stocks by sentiment score
+        // Query to get the worst 5 stocks by sentiment score, grouped by stock_symbol
         $worstStocks = SentimentAnalysis::where('created_at', '>=', $fiveDaysAgo)
-            ->select('stock_symbol', 'sentiment_score')
+            ->select('stock_symbol', DB::raw('MIN(sentiment_score) as sentiment_score'))  // Get the lowest sentiment score for each stock
+            ->groupBy('stock_symbol')            // Group by stock_symbol to ensure unique symbols
             ->orderBy('sentiment_score', 'asc')  // Order by ascending sentiment score
-            ->distinct('stock_symbol')            // Ensure unique stock symbols
-            ->take(5)                             // Limit to 5 results
+            ->take(5)                            // Limit to 5 results
             ->get();
 
         // Check if any results were found
