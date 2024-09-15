@@ -85,7 +85,12 @@ class SentimentAnalysisController extends Controller
             ->take(5)                             // Limit to 5 results
             ->get();
 
-        
+        // Check if any results were found
+        if ($worstStocks->isNotEmpty()) {
+            return response()->json($worstStocks, 200);
+        } else {
+            return response()->json(['message' => 'No sentiment analysis found in the last 5 days'], 404);
+        }
     }
 
     public function show($id)
