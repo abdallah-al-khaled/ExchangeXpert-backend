@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('stock_symbol');
             $table->decimal('predicted_price', 15, 2);
-            $table->timestamp('prediction_date');
+            $table->timestamp('prediction_date')->default(now());
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }
