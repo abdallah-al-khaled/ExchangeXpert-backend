@@ -41,6 +41,7 @@ class MlPredictionsController extends Controller
             'image_path' => $imagePath,
         ]);
 
+        return response()->json($mlPrediction, 201);
     }
 
     public function show($id)
