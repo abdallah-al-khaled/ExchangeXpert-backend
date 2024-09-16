@@ -34,7 +34,13 @@ class MlPredictionsController extends Controller
             $imagePath = $request->file('image')->store('public/images');
         }
 
-       
+        // Create a new prediction record
+        $mlPrediction = MlPrediction::create([
+            'stock_symbol' => $validatedData['stock_symbol'],
+            'prediction_date' => $validatedData['prediction_date'],
+            'image_path' => $imagePath,
+        ]);
+
     }
 
     public function show($id)
