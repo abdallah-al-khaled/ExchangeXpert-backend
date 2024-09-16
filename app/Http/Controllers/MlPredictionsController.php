@@ -22,6 +22,12 @@ class MlPredictionsController extends Controller
     public function storePrediction(Request $request)
     {
         // Validate the request
+        $validatedData = $request->validate([
+            'stock_symbol' => 'required|string',
+            'prediction_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
         
     }
 
