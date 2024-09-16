@@ -9,5 +9,6 @@ class MlPrediction extends Model
 {
     use HasFactory;
 
+    protected $table = 'ml_predictions';
     protected $fillable = ['stock_symbol', 'predicted_price', 'prediction_date'];
 }
