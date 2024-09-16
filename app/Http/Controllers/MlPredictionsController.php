@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MlPrediction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MlPredictionsController extends Controller
 {
@@ -24,7 +25,7 @@ class MlPredictionsController extends Controller
         // Validate the request
         $validatedData = $request->validate([
             'stock_symbol' => 'required|string',
-            'prediction_date' => 'required|date',
+            'predicted_price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -37,11 +38,22 @@ class MlPredictionsController extends Controller
         // Create a new prediction record
         $mlPrediction = MlPrediction::create([
             'stock_symbol' => $validatedData['stock_symbol'],
-            'prediction_date' => $validatedData['prediction_date'],
+            'predicted_price' => $validatedData['predicted_price'],
             'image_path' => $imagePath,
         ]);
-
         return response()->json($mlPrediction, 201);
+    }
+
+    public function getPredictions(Request $request)
+    {
+        // Get predictions filtered by stock_symbol if provided
+        if ($request->has('stock_symbol')) {
+            $predictions = MlPrediction::where('stock_symbol', $request->input('stock_symbol'))->get();
+        } else {
+            $predictions = MlPrediction::all();
+        }
+
+        return response()->json($predictions, 200);
     }
 
     public function show($id)

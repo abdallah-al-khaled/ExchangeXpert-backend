@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MlPredictionsController;
 use App\Http\Controllers\SentimentAnalysisController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,3 +43,4 @@ Route::get('/worst-sentiment-stocks', [SentimentAnalysisController::class, 'getW
 Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->middleware('auth:api');
 
 
+Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction']);
