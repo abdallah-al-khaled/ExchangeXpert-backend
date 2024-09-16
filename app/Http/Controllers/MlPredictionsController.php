@@ -25,7 +25,6 @@ class MlPredictionsController extends Controller
         // Validate the request
         $validatedData = $request->validate([
             'stock_symbol' => 'required|string',
-            'predicted_price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -38,7 +37,6 @@ class MlPredictionsController extends Controller
         // Create a new prediction record
         $mlPrediction = MlPrediction::create([
             'stock_symbol' => $validatedData['stock_symbol'],
-            'predicted_price' => $validatedData['predicted_price'],
             'image_path' => $imagePath,
         ]);
         return response()->json($mlPrediction, 201);

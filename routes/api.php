@@ -44,3 +44,5 @@ Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->mi
 
 
 Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction']);
+
+Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
