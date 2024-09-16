@@ -25,15 +25,16 @@ class MlPredictionsController extends Controller
         // Validate the request
         $validatedData = $request->validate([
             'stock_symbol' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
         // Handle file upload if provided
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('public/images');
         }
-
+        if (!$request->hasFile('image')) {
+            return response()->json(['error' => 'No image provided or file is invalid'], 400);
+        }
         // Create a new prediction record
         $mlPrediction = MlPrediction::create([
             'stock_symbol' => $validatedData['stock_symbol'],
