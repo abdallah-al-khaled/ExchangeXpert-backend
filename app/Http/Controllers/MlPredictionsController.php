@@ -19,6 +19,12 @@ class MlPredictionsController extends Controller
         return response()->json($prediction, 201);
     }
 
+    public function storePrediction(Request $request)
+    {
+        // Validate the request
+        
+    }
+
     public function show($id)
     {
         $prediction = MlPrediction::findOrFail($id);
