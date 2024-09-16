@@ -28,7 +28,13 @@ class MlPredictionsController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        
+        // Handle file upload if provided
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public/images');
+        }
+
+       
     }
 
     public function show($id)
