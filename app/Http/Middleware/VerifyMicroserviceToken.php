@@ -18,7 +18,7 @@ class VerifyMicroserviceToken
         $token = $request->header('Authorization');
 
         if ($token !== 'Bearer ' . env('MICROSERVICE_API_TOKEN')) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized' . env('MICROSERVICE_API_TOKEN') ], 401);
         }
         return $next($request);
     }

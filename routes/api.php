@@ -43,6 +43,6 @@ Route::get('/worst-sentiment-stocks', [SentimentAnalysisController::class, 'getW
 Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->middleware('auth:api');
 
 
-Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction']);
+Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'])->middleware('microservice.auth');
 
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
