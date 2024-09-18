@@ -155,6 +155,7 @@ class ApiKeyController extends Controller
         // Make the request to Alpaca API using Guzzle
         $client = new Client();
 
+        
         try {
             $response = $client->request('GET', "$baseUrl/v2/account/portfolio/history", [
                 'headers' => [
