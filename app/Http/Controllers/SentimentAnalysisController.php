@@ -55,6 +55,31 @@ class SentimentAnalysisController extends Controller
         }
     }
 
+    public function getLatestSentimentBatch(Request $request)
+    {
+        // Get the stock symbols from the request (expecting an array of stock symbols)
+        $stockSymbols = $request->input('stock_symbols');
+
+        // Check if stock symbols were provided
+        if (!$stockSymbols || !is_array($stockSymbols)) {
+            return response()->json(['message' => 'Invalid or missing stock symbols'], 400);
+        }
+
+        // Fetch the latest sentiment for each stock symbol
+        $latestSentiments = SentimentAnalysis::whereIn('stock_symbol', $stockSymbols)
+            ->select('stock_symbol', DB::raw('MAX(created_at) as latest_created_at')) // Find the latest created_at for each stock
+            ->groupBy('stock_symbol')
+            ->get();
+
+        // If no sentiments were found, return a 404 response
+        if ($latestSentiments->isEmpty()) {
+            return response()->json(['message' => 'No sentiment analysis found for the provided stock symbols'], 404);
+        }
+
+        return response()->json($latestSentiments, 200);
+    }
+
+
     public function getTopStocksBySentiment()
     {
         $fiveDaysAgo = now()->subDays(5);
