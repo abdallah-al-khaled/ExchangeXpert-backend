@@ -163,8 +163,8 @@ class ApiKeyController extends Controller
                     'accept' => 'application/json',
                 ],
                 'query' => [
-                    'period' => '5D',   // Fetch for the last 5 days
-                    'timeframe' => '5Min',  // Data interval
+                    'period' => '2D',   
+                    'timeframe' => '1Min',  
                     'intraday_reporting' => 'market_hours',
                     'pnl_reset' => 'per_day'
                 ]
