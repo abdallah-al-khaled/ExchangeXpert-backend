@@ -12,16 +12,17 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| Register API routes for the application. These routes are loaded by the
+| RouteServiceProvider and are assigned to the "api" middleware group.
 |
 */
 
+// User Route (Authenticated)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
@@ -29,20 +30,23 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
 });
 
-Route::post('/sentiment-analysis', [SentimentAnalysisController::class, 'store']);
-Route::get('/sentiment-analysis/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
-Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey'])->middleware('auth:api');
+// Sentiment Analysis Routes
+Route::prefix('sentiment-analysis')->group(function () {
+    Route::post('/', [SentimentAnalysisController::class, 'store']);
+    Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
+    Route::get('/top', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
+    Route::get('/worst', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
+});
 
-Route::get('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails'])->middleware('auth:api');
-Route::get('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory'])->middleware('auth:api');
+// Alpaca API Key and Account Management Routes (Authenticated)
+Route::middleware('auth:api')->group(function () {
+    Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey']);
+    Route::get('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails']);
+    Route::get('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory']);
+    Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions']);
+});
 
-
-Route::get('/top-sentiment-stocks', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
-Route::get('/worst-sentiment-stocks', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
-
-Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions'])->middleware('auth:api');
-
-
+// Machine Learning Predictions Routes
 Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'])->middleware('microservice.auth');
-
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
+
