@@ -33,9 +33,9 @@ Route::controller(AuthController::class)->group(function () {
 // Sentiment Analysis Routes
 Route::prefix('sentiment-analysis')->group(function () {
     Route::post('/', [SentimentAnalysisController::class, 'store']);
-    Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
     Route::get('/top', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
     Route::get('/worst', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
+    Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
 });
 
 // Alpaca API Key and Account Management Routes (Authenticated)
