@@ -21,4 +21,9 @@ class UserBot extends Model
     {
         return $this->belongsTo(Bot::class);
     }
+    
+    public function apiKey()
+    {
+        return $this->hasOne(ApiKey::class, 'user_id', 'user_id');
+    }
 }

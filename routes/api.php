@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MlPredictionsController;
 use App\Http\Controllers\SentimentAnalysisController;
+use App\Http\Controllers\TradesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,3 +51,4 @@ Route::middleware('auth:api')->group(function () {
 Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'])->middleware('microservice.auth');
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
+Route::post('/trade-signal/buy/{symbol}', [TradesController::class, 'executeBuySignal']);
