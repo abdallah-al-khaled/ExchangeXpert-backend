@@ -51,4 +51,4 @@ Route::middleware('auth:api')->group(function () {
 Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'])->middleware('microservice.auth');
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
-Route::post('/trade-signal/buy/{symbol}', [TradesController::class, 'executeBuySignal']);
+Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);

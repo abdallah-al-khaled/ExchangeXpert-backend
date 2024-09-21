@@ -53,11 +53,20 @@ class TradesController extends Controller
         return response()->json($unsoldStocks);
     }
 
-    public function executeBuySignal($stockSymbol)
+    public function executeBuySignal($stockSymbol, $botId)
     {
-        // Fetch all users with active bots
-        $activeUserBots = UserBot::with('apiKey')->where('status', 'active')->get();
-        echo $activeUserBots;
+        // Fetch all users with the specified bot active
+        $activeUserBots = UserBot::with('apiKey')
+            ->where('status', 'active')
+            ->where('bot_id', $botId)  // Only fetch users with the specified bot
+            ->get();
+
+        // Check if there are active user bots
+        if ($activeUserBots->isEmpty()) {
+            Log::warning("No active bots found for bot ID: {$botId}");
+            return response()->json(['message' => 'No active bots found for this bot.'], 404);
+        }
+
         // Loop through each active user bot
         foreach ($activeUserBots as $userBot) {
             // Get the user's API keys
@@ -134,7 +143,7 @@ class TradesController extends Controller
                 continue;
             }
 
-            // Save the trade record in the database
+            // Save the trade record in the database, specifying which bot triggered the trade
             Trade::create([
                 'user_bot_id' => $userBot->id,
                 'stock_symbol' => $stockSymbol,
@@ -147,6 +156,6 @@ class TradesController extends Controller
             Log::info("Successfully placed buy order for user {$userBot->user_id} for stock {$stockSymbol}");
         }
 
-        return response()->json(['message' => 'Buy signal executed for active users.'], 200);
+        return response()->json(['message' => 'Buy signal executed for active users of bot ' . $botId], 200);
     }
 }
