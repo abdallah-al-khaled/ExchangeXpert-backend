@@ -57,19 +57,19 @@ class TradesController extends Controller
     public function executeBuySignal($stockSymbol, $botId)
     {
         $activeUserBots = UserBot::with('apiKey')
-        ->where('status', 'active')
-        ->where('bot_id', $botId)
-        ->get();
+            ->where('status', 'active')
+            ->where('bot_id', $botId)
+            ->get();
 
-    if ($activeUserBots->isEmpty()) {
-        Log::warning("No active bots found for bot ID: {$botId}");
-        return response()->json(['message' => 'No active bots found for this bot.'], 404);
-    }
+        if ($activeUserBots->isEmpty()) {
+            Log::warning("No active bots found for bot ID: {$botId}");
+            return response()->json(['message' => 'No active bots found for this bot.'], 404);
+        }
 
-    foreach ($activeUserBots as $userBot) {
-        ExecuteBuySignalJob::dispatch($userBot, $stockSymbol);  // Dispatch a job for each user bot
-    }
+        foreach ($activeUserBots as $userBot) {
+            ExecuteBuySignalJob::dispatch($userBot, $stockSymbol);  // Dispatch a job for each user bot
+        }
 
-    return response()->json(['message' => 'Buy signal executed for active users of bot ' . $botId], 200);
+        return response()->json(['message' => 'Buy signal executed for active users of bot ' . $botId], 200);
     }
 }

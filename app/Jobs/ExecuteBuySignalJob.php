@@ -41,6 +41,7 @@ class ExecuteBuySignalJob implements ShouldQueue
             Log::warning("User {$this->userBot->user_id} does not have Alpaca API keys.");
             return;
         }
+        Log::info("Test Job is running.");
 
         $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
         $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
