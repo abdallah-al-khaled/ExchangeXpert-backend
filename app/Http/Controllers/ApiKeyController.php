@@ -178,6 +178,34 @@ class ApiKeyController extends Controller
         }
     }
 
+    public function getConfigurations(Request $request)
+    {
+        $userId = Auth::id();
+        $apiKeyRecord = ApiKey::where('user_id', $userId)->first();
+
+        if (!$apiKeyRecord) {
+            return response()->json(['error' => 'API keys not found for the user'], 404);
+        }
+
+        // Decrypt the API key and secret
+        $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
+        $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
+        
+
+        $client = new Client();
+        $response = $client->request('GET', 'https://paper-api.alpaca.markets/v2/account/configurations', [
+            'headers' => [
+                'APCA-API-KEY-ID' => $apiKey,
+                'APCA-API-SECRET-KEY' => $apiSecret,
+                'accept' => 'application/json',
+            ],
+        ]);
+
+        $configurations = json_decode($response->getBody(), true);
+        return response()->json($configurations);
+    }
+
+
     /**
      * Display the specified resource.
      */

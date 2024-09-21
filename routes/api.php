@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails']);
     Route::get('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory']);
     Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions']);
+    Route::get('/alpaca-configurations', [ApiKeyController::class, 'getConfigurations']);
 });
 
 // Machine Learning Predictions Routes
