@@ -109,7 +109,7 @@ class ApiKeyController extends Controller
         $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
 
         // Determine if the user is activated for live or paper trading
-        $baseUrl = $apiKeyRecord->is_activated 
+        $baseUrl = $apiKeyRecord->is_activated
             ? 'https://api.alpaca.markets/v2/positions'  // Live trading
             : 'https://paper-api.alpaca.markets/v2/positions';  // Paper trading
 
@@ -155,7 +155,7 @@ class ApiKeyController extends Controller
         // Make the request to Alpaca API using Guzzle
         $client = new Client();
 
-        
+
         try {
             $response = $client->request('GET', "$baseUrl/v2/account/portfolio/history", [
                 'headers' => [
@@ -164,8 +164,8 @@ class ApiKeyController extends Controller
                     'accept' => 'application/json',
                 ],
                 'query' => [
-                    'period' => '2D',   
-                    'timeframe' => '1Min',  
+                    'period' => '2D',
+                    'timeframe' => '1Min',
                     'intraday_reporting' => 'market_hours',
                     'pnl_reset' => 'per_day'
                 ]
@@ -190,7 +190,7 @@ class ApiKeyController extends Controller
         // Decrypt the API key and secret
         $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
         $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
-        
+
 
         $client = new Client();
         $response = $client->request('GET', 'https://paper-api.alpaca.markets/v2/account/configurations', [
@@ -205,6 +205,51 @@ class ApiKeyController extends Controller
         return response()->json($configurations);
     }
 
+    public function updateConfigurations(Request $request)
+    {
+        $userId = Auth::id();
+        $apiKeyRecord = ApiKey::where('user_id', $userId)->first();
+
+        if (!$apiKeyRecord) {
+            return response()->json(['error' => 'API keys not found for the user'], 404);
+        }
+
+        // Decrypt the API key and secret
+        $apiKey = Crypt::decryptString($apiKeyRecord->api_key);
+        $apiSecret = Crypt::decryptString($apiKeyRecord->api_secret);
+
+        $client = new Client();
+        $response = $client->request('PATCH', 'https://paper-api.alpaca.markets/v2/account/configurations', [
+            'headers' => [
+                'APCA-API-KEY-ID' => $apiKey,
+                'APCA-API-SECRET-KEY' => $apiSecret,
+                'accept' => 'application/json',
+            ],
+            'json' => [
+                'dtbp_check' => $request->input('dtbp_check'),
+                'fractional_trading' => filter_var($request->input('fractional_trading'), FILTER_VALIDATE_BOOLEAN),
+                'max_margin_multiplier' => $request->input('max_margin_multiplier'),
+                'no_shorting' => filter_var($request->input('no_shorting'), FILTER_VALIDATE_BOOLEAN),
+                'pdt_check' => $request->input('pdt_check'),
+                'suspend_trade' => filter_var($request->input('suspend_trade'), FILTER_VALIDATE_BOOLEAN),
+                'trade_confirm_email' => $request->input('trade_confirm_email'),
+            ],
+        ]);
+        // filter_var($validatedData['no_shorting'], FILTER_VALIDATE_BOOLEAN);
+
+        $updatedConfigurations = json_decode($response->getBody(), true);
+        return response()->json([
+            'dtbp_check' => $request->input('dtbp_check'),
+            'fractional_trading' => $request->input('fractional_trading'),
+            'max_margin_multiplier' => $request->input('max_margin_multiplier'),
+            'no_shorting' => $request->input('no_shorting'),
+            'pdt_check' => $request->input('pdt_check'),
+            'suspend_trade' => $request->input('suspend_trade'),
+            'trade_confirm_email' => $request->input('trade_confirm_email'),
+        ], 200);
+    }
+
+    
 
     /**
      * Display the specified resource.

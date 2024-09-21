@@ -46,6 +46,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/get-portfolio-history', [ApiKeyController::class, 'getPortfolioHistory']);
     Route::get('/open-positions', [ApiKeyController::class, 'getOpenPositions']);
     Route::get('/alpaca-configurations', [ApiKeyController::class, 'getConfigurations']);
+    Route::post('/alpaca-configurations', [ApiKeyController::class, 'updateConfigurations']);
 });
 
 // Machine Learning Predictions Routes
@@ -53,3 +54,15 @@ Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
+
+
+// {
+//     "dtbp_check": "entry",
+//     "fractional_trading": true,
+//     "max_margin_multiplier": "4",
+//     "no_shorting": false,
+//     "pdt_check": "entry",
+//     "ptp_no_exception_entry": false,
+//     "suspend_trade": false,
+//     "trade_confirm_email": "all"
+// }
