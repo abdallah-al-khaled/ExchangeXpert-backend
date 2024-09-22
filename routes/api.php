@@ -56,7 +56,7 @@ Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
-Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades']);
+Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades'])->middleware('auth:api');
 
 // {
 //     "dtbp_check": "entry",

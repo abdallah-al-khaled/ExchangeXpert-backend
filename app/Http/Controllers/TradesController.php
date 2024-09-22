@@ -77,7 +77,8 @@ class TradesController extends Controller
     public function latestTrades($botId)
     {
         // Get the authenticated user's ID
-        $userId = 10;
+        $userId = Auth::user()->id;
+        // user10
 
         // Find the user_bot record for the given user and bot
         $userBot = UserBot::where('user_id', $userId)
