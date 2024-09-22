@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('bot_id')->constrained()->onDelete('cascade');
-            $table->decimal('allocated_amount', 15, 2);
+            $table->decimal('allocated_amount', 15, 2)->default(0);
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->timestamps();
         });

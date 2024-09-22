@@ -59,5 +59,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    protected static function boot()
+{
+    parent::boot();
+
+    // Register the UserObserver to the User model
+    static::observe(\App\Observers\UserObserver::class);
+}
 
 }

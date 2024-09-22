@@ -55,6 +55,8 @@ class SentimentAnalysisController extends Controller
         }
     }
 
+    
+
     public function getLatestSentimentBatch(Request $request)
     {
         // Get the stock symbols from the request (expecting an array of stock symbols)
