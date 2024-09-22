@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserBot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserBotsController extends Controller
 {
@@ -14,9 +15,13 @@ class UserBotsController extends Controller
     }
 
 
-    public function toggleActivation($id)
+    public function toggleActivation(Request $request, $botId)
     {
-        $userBot = UserBot::find($id);
+        $userId = Auth::id();
+
+        $userBot = UserBot::where('user_id', $userId)
+            ->where('bot_id', $botId)
+            ->first();
 
         if (!$userBot) {
             return response()->json(['message' => 'User Bot not found'], 404);
@@ -27,33 +32,67 @@ class UserBotsController extends Controller
         $userBot->save();
 
         return response()->json([
-            'message' => 'User Bot status updated successfully',
-            'user_bot' => $userBot,
+            'user_bot' => ["status" => $userBot->status,]
         ], 200);
     }
 
+
     public function store(Request $request)
     {
-        $userBot = UserBot::create($request->all());
+        // Validate the request
+        $validatedData = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'bot_id' => 'required|integer|exists:bots,id',
+            'allocated_amount' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        // Create the user bot record
+        $userBot = UserBot::create($validatedData);
+
         return response()->json($userBot, 201);
     }
 
     public function show($id)
     {
-        $userBot = UserBot::with('user', 'bot')->findOrFail($id);
-        return response()->json($userBot);
+        $userBot = UserBot::with('user', 'bot')->find($id);
+
+        if (!$userBot) {
+            return response()->json(['message' => 'User Bot not found'], 404);
+        }
+
+        return response()->json($userBot, 200);
     }
 
     public function update(Request $request, $id)
     {
+        // Find the user bot record
         $userBot = UserBot::findOrFail($id);
-        $userBot->update($request->all());
+
+        // Validate the request
+        $validatedData = $request->validate([
+            'allocated_amount' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        // Update the user bot record
+        $userBot->update($validatedData);
+
         return response()->json($userBot, 200);
     }
 
     public function destroy($id)
     {
-        UserBot::destroy($id);
+        // Find the user bot record
+        $userBot = UserBot::find($id);
+
+        if (!$userBot) {
+            return response()->json(['message' => 'User Bot not found'], 404);
+        }
+
+        // Delete the user bot record
+        $userBot->delete();
+
         return response()->json(null, 204);
     }
 }

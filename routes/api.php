@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BotsController;
 use App\Http\Controllers\MlPredictionsController;
 use App\Http\Controllers\SentimentAnalysisController;
 use App\Http\Controllers\TradesController;
+use App\Http\Controllers\UserBotsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -66,3 +68,27 @@ Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'exe
 //     "suspend_trade": false,
 //     "trade_confirm_email": "all"
 // }
+
+Route::get('/bots', [BotsController::class, 'index']);
+Route::post('/bots', [BotsController::class, 'store']);
+Route::get('/bots/{id}', [BotsController::class, 'show']);
+Route::put('/bots/{id}', [BotsController::class, 'update']);
+Route::delete('/bots/{id}', [BotsController::class, 'destroy']);
+
+
+// List all user bots with user and bot information
+Route::get('/user-bots', [UserBotsController::class, 'index']);
+
+// Toggle activation status (active/inactive) for a specific user bot
+Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation']);
+// Store a new user bot
+Route::post('/user-bots', [UserBotsController::class, 'store']);
+
+// Show a specific user bot by ID with user and bot relationships
+Route::get('/user-bots/{id}', [UserBotsController::class, 'show']);
+
+// Update a specific user bot by ID
+Route::put('/user-bots/{id}', [UserBotsController::class, 'update']);
+
+// Delete a specific user bot by ID
+Route::delete('/user-bots/{id}', [UserBotsController::class, 'destroy']);
