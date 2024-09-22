@@ -98,11 +98,13 @@ class ExecuteBuySignalJob implements ShouldQueue
                 'type' => 'market',
                 'time_in_force' => 'gtc', // Good Till Cancelled
             ]);
+            echo "Order Response: " . $alpacaOrderUrl;
 
             if ($orderResponse->failed()) {
                 Log::error("Failed to place buy order for user {$this->userBot->user_id} for stock {$this->stockSymbol}");
                 return;
             }
+
 
             // Save the trade record
             Trade::create([
@@ -116,7 +118,7 @@ class ExecuteBuySignalJob implements ShouldQueue
 
             Log::info("Successfully placed buy order for user {$this->userBot->user_id} for stock {$this->stockSymbol}");
         } catch (\Exception $e) {
-            Log::error("Failed to execute buy signal for user {$this->userBot->user_id} for stock {$this->stockSymbol}: " . $e->getMessage());
+            Log::error("Failed to execute buy signal for user {$this->userBot->user_id} for stock {$this->stockSymbol}: " . $e);
         }
     }
 }

@@ -95,4 +95,29 @@ class UserBotsController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function getUserBotDetails($botId)
+{
+    // Get the authenticated user's ID
+    $userId = Auth::id();
+
+    // Find the user_bot record for the given user and bot
+    $userBot = UserBot::where('user_id', $userId)
+                      ->where('bot_id', $botId)
+                      ->first();
+
+    // Check if the user_bot exists
+    if (!$userBot) {
+        return response()->json(['message' => 'User Bot not found'], 404);
+    }
+
+    // Return the user_bot details
+    return response()->json([
+        'user_bot_id' => $userBot->id,
+        'status' => $userBot->status,
+        'allocated_amount' => $userBot->allocated_amount,
+        'created_at' => $userBot->created_at,
+        'updated_at' => $userBot->updated_at
+    ], 200);
+}
 }

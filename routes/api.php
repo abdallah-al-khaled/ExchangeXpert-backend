@@ -56,7 +56,7 @@ Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
-
+Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades']);
 
 // {
 //     "dtbp_check": "entry",
@@ -80,12 +80,12 @@ Route::delete('/bots/{id}', [BotsController::class, 'destroy']);
 Route::get('/user-bots', [UserBotsController::class, 'index']);
 
 // Toggle activation status (active/inactive) for a specific user bot
-Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation']);
+Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation'])->middleware('auth:api');
 // Store a new user bot
 Route::post('/user-bots', [UserBotsController::class, 'store']);
 
 // Show a specific user bot by ID with user and bot relationships
-Route::get('/user-bots/{id}', [UserBotsController::class, 'show']);
+Route::get('/user-bots/{botId}', [UserBotsController::class, 'getUserBotDetails'])->middleware('auth:api');
 
 // Update a specific user bot by ID
 Route::put('/user-bots/{id}', [UserBotsController::class, 'update']);
