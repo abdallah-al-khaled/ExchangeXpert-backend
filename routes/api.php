@@ -72,8 +72,4 @@ Route::post('/user-bots', [UserBotsController::class, 'store']);
 
 Route::get('/user-bots/{botId}', [UserBotsController::class, 'getUserBotDetails'])->middleware('auth:api');
 
-Route::put('/user-bots/{id}', [UserBotsController::class, 'update']);
-
-Route::delete('/user-bots/{id}', [UserBotsController::class, 'destroy']);
-
-Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot']);
+Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot'])->middleware('auth:api');

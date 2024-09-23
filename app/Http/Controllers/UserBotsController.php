@@ -123,7 +123,6 @@ class UserBotsController extends Controller
     }
     public function getUsersUsingBot($id)
     {
-        // Find all users associated with the bot where the status is 'active'
         $activeUsers = User::whereHas('userBots', function ($query) use ($id) {
             $query->where('bot_id', $id)
                 ->where('status', 'active');
