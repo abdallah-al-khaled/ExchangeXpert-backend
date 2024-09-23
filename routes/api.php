@@ -31,6 +31,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
+    Route::get('user', 'user');
+
 });
 
 // Sentiment Analysis Routes
@@ -78,19 +80,15 @@ Route::delete('/bots/{id}', [BotsController::class, 'destroy']);
 
 // List all user bots with user and bot information
 Route::get('/user-bots', [UserBotsController::class, 'index']);
-
+// 
 // Toggle activation status (active/inactive) for a specific user bot
 Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation'])->middleware('auth:api');
-// Store a new user bot
 Route::post('/user-bots', [UserBotsController::class, 'store']);
 
-// Show a specific user bot by ID with user and bot relationships
 Route::get('/user-bots/{botId}', [UserBotsController::class, 'getUserBotDetails'])->middleware('auth:api');
 
-// Update a specific user bot by ID
 Route::put('/user-bots/{id}', [UserBotsController::class, 'update']);
 
-// Delete a specific user bot by ID
 Route::delete('/user-bots/{id}', [UserBotsController::class, 'destroy']);
 
 Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot']);
