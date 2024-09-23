@@ -26,4 +26,8 @@ class UserBot extends Model
     {
         return $this->hasOne(ApiKey::class, 'user_id', 'user_id');
     }
+    public function trades()
+    {
+        return $this->hasMany(Trade::class);
+    }
 }

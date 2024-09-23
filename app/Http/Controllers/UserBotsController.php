@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\UserBot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,27 +98,38 @@ class UserBotsController extends Controller
     }
 
     public function getUserBotDetails($botId)
-{
-    // Get the authenticated user's ID
-    $userId = Auth::id();
+    {
+        // Get the authenticated user's ID
+        $userId = Auth::id();
 
-    // Find the user_bot record for the given user and bot
-    $userBot = UserBot::where('user_id', $userId)
-                      ->where('bot_id', $botId)
-                      ->first();
+        // Find the user_bot record for the given user and bot
+        $userBot = UserBot::where('user_id', $userId)
+            ->where('bot_id', $botId)
+            ->first();
 
-    // Check if the user_bot exists
-    if (!$userBot) {
-        return response()->json(['message' => 'User Bot not found'], 404);
+        // Check if the user_bot exists
+        if (!$userBot) {
+            return response()->json(['message' => 'User Bot not found'], 404);
+        }
+
+        // Return the user_bot details
+        return response()->json([
+            'user_bot_id' => $userBot->id,
+            'status' => $userBot->status,
+            'allocated_amount' => $userBot->allocated_amount,
+            'created_at' => $userBot->created_at,
+            'updated_at' => $userBot->updated_at
+        ], 200);
     }
+    public function getUsersUsingBot($id)
+    {
+        // Find all users associated with the bot where the status is 'active'
+        $activeUsers = User::whereHas('userBots', function ($query) use ($id) {
+            $query->where('bot_id', $id)
+                ->where('status', 'active');
+        })->get();
 
-    // Return the user_bot details
-    return response()->json([
-        'user_bot_id' => $userBot->id,
-        'status' => $userBot->status,
-        'allocated_amount' => $userBot->allocated_amount,
-        'created_at' => $userBot->created_at,
-        'updated_at' => $userBot->updated_at
-    ], 200);
-}
+        // Return the users as a JSON response
+        return response()->json($activeUsers, 200);
+    }
 }

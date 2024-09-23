@@ -57,7 +57,7 @@ Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
 Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades'])->middleware('auth:api');
-
+Route::get('/bots/{botId}/user-trades', [TradesController::class, 'getUserTradesForBot']);
 // {
 //     "dtbp_check": "entry",
 //     "fractional_trading": true,
@@ -92,3 +92,5 @@ Route::put('/user-bots/{id}', [UserBotsController::class, 'update']);
 
 // Delete a specific user bot by ID
 Route::delete('/user-bots/{id}', [UserBotsController::class, 'destroy']);
+
+Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot']);
