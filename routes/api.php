@@ -40,7 +40,6 @@ Route::prefix('sentiment-analysis')->group(function () {
     Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
 });
 
-// Alpaca API Key and Account Management Routes (Authenticated)
 Route::middleware('auth:api')->group(function () {
     Route::post('/store-alpaca-key', [ApiKeyController::class, 'storeAlpacaKey']);
     Route::get('/get-account', [ApiKeyController::class, 'getAlpacaAccountDetails']);
@@ -50,23 +49,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/alpaca-configurations', [ApiKeyController::class, 'updateConfigurations']);
 });
 
-// Machine Learning Predictions Routes
 Route::post('/ml-prediction', [MlPredictionsController::class, 'storePrediction'])->middleware('microservice.auth');
 Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']);
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
 Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades'])->middleware('auth:api');
 Route::get('/bots/{botId}/user-trades', [TradesController::class, 'getUserTradesForBot']);
-// {
-//     "dtbp_check": "entry",
-//     "fractional_trading": true,
-//     "max_margin_multiplier": "4",
-//     "no_shorting": false,
-//     "pdt_check": "entry",
-//     "ptp_no_exception_entry": false,
-//     "suspend_trade": false,
-//     "trade_confirm_email": "all"
-// }
 
 Route::get('/bots', [BotsController::class, 'index']);
 Route::post('/bots', [BotsController::class, 'store']);
