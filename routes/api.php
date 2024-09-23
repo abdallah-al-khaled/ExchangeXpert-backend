@@ -20,12 +20,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// User Route (Authenticated)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
@@ -35,7 +33,6 @@ Route::controller(AuthController::class)->group(function () {
 
 });
 
-// Sentiment Analysis Routes
 Route::prefix('sentiment-analysis')->group(function () {
     Route::post('/', [SentimentAnalysisController::class, 'store']);
     Route::get('/top', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
