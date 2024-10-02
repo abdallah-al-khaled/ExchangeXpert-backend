@@ -30,7 +30,6 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
     Route::get('user', 'user');
-
 });
 
 Route::prefix('sentiment-analysis')->group(function () {
@@ -38,6 +37,7 @@ Route::prefix('sentiment-analysis')->group(function () {
     Route::get('/top', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
     Route::get('/worst', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
     Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
+    Route::post('/get-latest-sentiments',[SentimentAnalysisController::class, 'getLatestSentimentBatch']);
 });
 
 Route::middleware('auth:api')->group(function () {

@@ -55,7 +55,7 @@ class SentimentAnalysisController extends Controller
         }
     }
 
-    
+
 
     public function getLatestSentimentBatch(Request $request)
     {
@@ -69,8 +69,12 @@ class SentimentAnalysisController extends Controller
 
         // Fetch the latest sentiment for each stock symbol
         $latestSentiments = SentimentAnalysis::whereIn('stock_symbol', $stockSymbols)
-            ->select('stock_symbol', DB::raw('MAX(created_at) as latest_created_at')) // Find the latest created_at for each stock
-            ->groupBy('stock_symbol')
+            ->select('stock_symbol', 'sentiment_score', 'created_at')
+            ->whereIn(DB::raw('(stock_symbol, created_at)'), function ($query) {
+                $query->select(DB::raw('stock_symbol, MAX(created_at)'))
+                    ->from('sentiment_analysis')
+                    ->groupBy('stock_symbol');
+            })
             ->get();
 
         // If no sentiments were found, return a 404 response
@@ -80,6 +84,8 @@ class SentimentAnalysisController extends Controller
 
         return response()->json($latestSentiments, 200);
     }
+
+
 
 
     public function getTopStocksBySentiment()
