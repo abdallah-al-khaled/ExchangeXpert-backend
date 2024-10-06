@@ -54,7 +54,7 @@ Route::get('/ml-predictions', [MlPredictionsController::class, 'getPredictions']
 
 Route::post('/trade-signal/buy/{symbol}/{botId}', [TradesController::class, 'executeBuySignal']);
 Route::get('/bots/{id}/latest-trades', [TradesController::class, 'latestTrades'])->middleware('auth:api');
-Route::get('/bots/{botId}/user-trades', [TradesController::class, 'getUserTradesForBot']);
+Route::get('/bots/{botId}/user-trades', [TradesController::class, 'getUserTradesForBot'])->middleware('admin');
 
 Route::get('/bots', [BotsController::class, 'index']);
 Route::post('/bots', [BotsController::class, 'store']);
@@ -65,7 +65,7 @@ Route::delete('/bots/{id}', [BotsController::class, 'destroy']);
 
 // List all user bots with user and bot information
 Route::get('/user-bots', [UserBotsController::class, 'index']);
-// 
+
 // Toggle activation status (active/inactive) for a specific user bot
 Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation'])->middleware('auth:api');
 Route::post('/user-bots', [UserBotsController::class, 'store']);
