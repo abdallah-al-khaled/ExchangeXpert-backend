@@ -59,10 +59,8 @@ class SentimentAnalysisController extends Controller
 
     public function getLatestSentimentBatch(Request $request)
     {
-        // Get the stock symbols from the request (expecting an array of stock symbols)
         $stockSymbols = $request->input('stock_symbols');
 
-        // Check if stock symbols were provided
         if (!$stockSymbols || !is_array($stockSymbols)) {
             return response()->json(['message' => 'Invalid or missing stock symbols'], 400);
         }

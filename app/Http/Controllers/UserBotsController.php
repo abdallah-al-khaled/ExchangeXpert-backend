@@ -40,7 +40,6 @@ class UserBotsController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the request
         $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'bot_id' => 'required|integer|exists:bots,id',
@@ -48,7 +47,6 @@ class UserBotsController extends Controller
             'status' => 'required|in:active,inactive'
         ]);
 
-        // Create the user bot record
         $userBot = UserBot::create($validatedData);
 
         return response()->json($userBot, 201);
@@ -67,16 +65,13 @@ class UserBotsController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Find the user bot record
         $userBot = UserBot::findOrFail($id);
 
-        // Validate the request
         $validatedData = $request->validate([
             'allocated_amount' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive'
         ]);
 
-        // Update the user bot record
         $userBot->update($validatedData);
 
         return response()->json($userBot, 200);
@@ -84,14 +79,12 @@ class UserBotsController extends Controller
 
     public function destroy($id)
     {
-        // Find the user bot record
         $userBot = UserBot::find($id);
 
         if (!$userBot) {
             return response()->json(['message' => 'User Bot not found'], 404);
         }
 
-        // Delete the user bot record
         $userBot->delete();
 
         return response()->json(null, 204);
@@ -99,20 +92,16 @@ class UserBotsController extends Controller
 
     public function getUserBotDetails($botId)
     {
-        // Get the authenticated user's ID
         $userId = Auth::id();
 
-        // Find the user_bot record for the given user and bot
         $userBot = UserBot::where('user_id', $userId)
             ->where('bot_id', $botId)
             ->first();
 
-        // Check if the user_bot exists
         if (!$userBot) {
             return response()->json(['message' => 'User Bot not found'], 404);
         }
 
-        // Return the user_bot details
         return response()->json([
             'user_bot_id' => $userBot->id,
             'status' => $userBot->status,
@@ -128,7 +117,31 @@ class UserBotsController extends Controller
                 ->where('status', 'active');
         })->get();
 
-        // Return the users as a JSON response
         return response()->json($activeUsers, 200);
+    }
+
+    public function updateBalance(Request $request, $botId)
+    {
+        $userId = Auth::id();
+
+        $userBot = UserBot::where('user_id', $userId)
+            ->where('bot_id', $botId)
+            ->first();
+
+        if (!$userBot) {
+            return response()->json(['message' => 'User Bot not found'], 404);
+        }
+
+        $validatedData = $request->validate([
+            'allocated_amount' => 'required|numeric|min:0',
+        ]);
+
+        $userBot->allocated_amount = $validatedData['allocated_amount'];
+        $userBot->save();
+
+        return response()->json([
+            'message' => 'Bot balance updated successfully.',
+            'allocated_amount' => $userBot->allocated_amount,
+        ], 200);
     }
 }
