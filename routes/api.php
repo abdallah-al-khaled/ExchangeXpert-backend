@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:admin')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -37,7 +37,7 @@ Route::prefix('sentiment-analysis')->group(function () {
     Route::get('/top', [SentimentAnalysisController::class, 'getTopStocksBySentiment']);
     Route::get('/worst', [SentimentAnalysisController::class, 'getWorstStocksBySentiment']);
     Route::get('/{stock_symbol}', [SentimentAnalysisController::class, 'getLatestSentiment']);
-    Route::post('/get-latest-sentiments',[SentimentAnalysisController::class, 'getLatestSentimentBatch']);
+    Route::post('/get-latest-sentiments', [SentimentAnalysisController::class, 'getLatestSentimentBatch']);
 });
 
 Route::middleware('auth:api')->group(function () {
@@ -62,14 +62,13 @@ Route::get('/bots/{id}', [BotsController::class, 'show']);
 Route::put('/bots/{id}', [BotsController::class, 'update']);
 Route::delete('/bots/{id}', [BotsController::class, 'destroy']);
 
-
-// List all user bots with user and bot information
-Route::get('/user-bots', [UserBotsController::class, 'index']);
-
-// Toggle activation status (active/inactive) for a specific user bot
-Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation'])->middleware('auth:api');
 Route::post('/user-bots', [UserBotsController::class, 'store']);
 
-Route::get('/user-bots/{botId}', [UserBotsController::class, 'getUserBotDetails'])->middleware('auth:api');
+Route::put('/user-bots/{bot}/update-balance', [UserBotsController::class, 'updateBalance'])->middleware('auth:api');
 
-Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot'])->middleware('auth:api');
+Route::middleware('auth:api')->group(function () {
+    Route::put('/user-bots/{bot}/update-balance', [UserBotsController::class, 'updateBalance']); // Update bot balance
+    Route::get('/user-bots/{botId}', [UserBotsController::class, 'getUserBotDetails'])->middleware('auth:api');
+    Route::get('/bots/{id}/users', [UserBotsController::class, 'getUsersUsingBot'])->middleware('auth:api');
+    Route::put('/user-bots/{botId}/toggle', [UserBotsController::class, 'toggleActivation'])->middleware('auth:api');
+});

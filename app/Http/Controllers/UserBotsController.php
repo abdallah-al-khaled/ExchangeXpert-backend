@@ -135,10 +135,11 @@ class UserBotsController extends Controller
         $validatedData = $request->validate([
             'allocated_amount' => 'required|numeric|min:0',
         ]);
+        $userBot->timestamps = false;
 
         $userBot->allocated_amount = $validatedData['allocated_amount'];
         $userBot->save();
-
+        $userBot->timestamps = true;
         return response()->json([
             'message' => 'Bot balance updated successfully.',
             'allocated_amount' => $userBot->allocated_amount,
